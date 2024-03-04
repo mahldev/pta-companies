@@ -1,0 +1,30 @@
+###
+GET http://localhost:8080/company
+
+###
+POST http://localhost:8080/company
+Content-Type: Application/json
+
+{
+    "name": "Company 1",
+    "sectorName": "Sector 1",
+    "numberOfEmployees": 1000,
+    "revenues": 13000,
+    "description": "asdf"
+}
+
+###
+GET http://localhost:8080/company/2
+
+###
+PUT http://localhost:8080/company/1
+Content-Type: Application/json
+
+{
+    "name": "Changed",
+    "cif": "Updated",
+    "address": "City 1",
+    "phone": "Country 1",
+    "email": "Country 1",
+    "contactPerson": "Country 1"
+}
