@@ -1,14 +1,16 @@
 package org.iesbelen.pta.companies.infrastructure.controller;
 
 import java.net.URI;
-import java.util.List;
 
+import org.iesbelen.pta.companies.application.dto.CompanyListResponseDto;
 import org.iesbelen.pta.companies.application.dto.CompanyRequestDto;
 import org.iesbelen.pta.companies.application.dto.CompanyResponseDto;
 import org.iesbelen.pta.companies.application.mapper.CompanyMapper;
 import org.iesbelen.pta.companies.application.service.CompanyService;
+import org.iesbelen.pta.sector.application.service.SectorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,23 +22,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("company")
+@CrossOrigin(origins = "http://localhost:4200")
 public class CompanyController {
 
     @Autowired
     private CompanyService companyService;
 
     @Autowired
+    private SectorService sectorService;
+
+    @Autowired
     private CompanyMapper companyMapper;
 
-    record CompanyListResponse(List<CompanyResponseDto> companies) {
-    }
-
     @GetMapping({ "", "/" })
-    ResponseEntity<CompanyListResponse> listAll() {
+    ResponseEntity<CompanyListResponseDto> listAll() {
         var companiesList = companyService.listAll().stream()
                 .map(companyMapper::toCompanyResponseDto)
                 .toList();
-        var companies = new CompanyListResponse(companiesList);
+        var companies = new CompanyListResponseDto(companiesList);
 
         return ResponseEntity.ok(companies);
     }
@@ -44,9 +47,9 @@ public class CompanyController {
     @PostMapping({ "", "/" })
     ResponseEntity<CompanyResponseDto> create(
             @RequestBody CompanyRequestDto companyRequestDto) {
-        var createdCompany = companyService.create(
-                companyMapper.toCompany(companyRequestDto),
-                companyRequestDto.sectorName());
+        var company = companyMapper.toCompany(companyRequestDto);
+        var sector = sectorService.findByName(companyRequestDto.sectorName());
+        var createdCompany = companyService.create(company, sector);
         var createdCompanyDto = companyMapper.toCompanyResponseDto(createdCompany);
 
         return ResponseEntity
@@ -74,8 +77,10 @@ public class CompanyController {
     }
 
     @DeleteMapping("/{id}")
-    void delete(@PathVariable Long id) {
+    ResponseEntity<Void> remove(@PathVariable Long id) {
         companyService.remove(id);
+
+        return ResponseEntity.noContent().build();
     }
 
 }

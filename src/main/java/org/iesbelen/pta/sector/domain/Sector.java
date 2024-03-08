@@ -1,8 +1,10 @@
-package org.iesbelen.pta.companies.domain;
+package org.iesbelen.pta.sector.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.iesbelen.pta.companies.domain.Company;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +22,7 @@ import lombok.ToString;
 @Table(name = "company_sectors")
 @Data
 @NoArgsConstructor
-public class CompanySector implements Serializable {
+public class Sector implements Serializable {
 
     @Id
     @Column(name = "id")
@@ -30,14 +32,17 @@ public class CompanySector implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "companySector")
+    @OneToMany(mappedBy = "sector")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Company> companies;
 
-    public CompanySector(String name) {
+    public Sector(String name) {
         this.name = name;
         this.companies = new ArrayList<>();
     }
+
+    @Column(name = "deleted", columnDefinition = "boolean default false")
+    private boolean deleted;
 
 }

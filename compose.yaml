@@ -1,22 +1,45 @@
-version: "3.8"
+version: "3.9"
 
 services:
-  mysql:
-    container_name: db-companies
+
+  db:
     image: mysql:5.7
     command:
       [
         "--character-set-server=utf8mb4",
         "--collation-server=utf8mb4_general_ci",
         "--init-connect='SET NAMES UTF8;'",
-        "--innodb-flush-log-at-trx-commit=0",
+        # "--innodb-flush-log-at-trx-commit=0",
       ]
     ports:
       - "3306:3306"
     restart: always
+    healthcheck:
+      test: "mysql -uroot -p12345678 -e 'select 1;'"
+      interval: 1s
+      retries: 20
     environment:
       - MYSQL_ROOT_PASSWORD=12345678
       - MYSQL_DATABASE=companies
       - LANG=C.UTF-8
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  api:
+    build:
+      context: .
+      dockerfile: api.Dockerfile
+      args:
+        JAR_FILE: build/libs/*.jar
+    ports: 
+      - "8080:8080"
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+
+

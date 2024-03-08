@@ -1,3 +1,4 @@
+### COMPANIES
 ###
 GET http://localhost:8080/company
 
@@ -6,15 +7,20 @@ POST http://localhost:8080/company
 Content-Type: Application/json
 
 {
-    "name": "Company 1",
+    "name": "Empresa XYZ",
     "sectorName": "Sector 1",
-    "numberOfEmployees": 1000,
-    "revenues": 13000,
-    "description": "asdf"
+    "numberOfEmployees": 100,
+    "revenues": 1000000,
+    "location": {
+        "longitude": 12.34,
+        "latitude": 56.78
+    },
+    "description": "Una breve descripción de la empresa XYZ"
 }
 
+
 ###
-GET http://localhost:8080/company/2
+GET http://localhost:8080/company/1
 
 ###
 PUT http://localhost:8080/company/1
@@ -22,9 +28,40 @@ Content-Type: Application/json
 
 {
     "name": "Changed",
-    "cif": "Updated",
-    "address": "City 1",
-    "phone": "Country 1",
-    "email": "Country 1",
-    "contactPerson": "Country 1"
+    "sectorName": "Changed Sector 1",
+    "numberOfEmployees": 1000,
+    "revenues": 13000,
+    "description": "ljlkjlkjlj"
 }
+
+###
+DELETE http://localhost:8080/company/1
+
+### SECTORS
+
+GET http://localhost:8080/sector
+
+###
+GET http://localhost:8080/sector/1
+
+###
+POST http://localhost:8080/sector
+Content-Type: application/json
+
+{
+    "name": "Sector 1",
+    "description": "asdf"
+}
+
+###
+PUT http://localhost:8080/sector/2
+Content-Type: Application/json
+
+{
+    "name": "Changed Sector 1",
+    "description": "ljlkjlkjlj"
+}
+
+###
+DELETE http://localhost:8080/sector/1
+

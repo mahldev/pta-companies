@@ -6,5 +6,6 @@ public record CompanyResponseDto(
         String sectorName,
         Integer numberOfEmployees,
         Long revenues,
-        String description) {
+        String description,
+        CompanyLocationDto location) {
 }

@@ -2,7 +2,11 @@ package org.iesbelen.pta.companies.domain;
 
 import java.io.Serializable;
 
+import org.iesbelen.pta.sector.domain.Sector;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +25,7 @@ import lombok.ToString;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class Company implements Serializable {
 
     @Id
@@ -35,7 +40,7 @@ public class Company implements Serializable {
     @JoinColumn(name = "sector_id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private CompanySector companySector;
+    private Sector sector;
 
     @Column(name = "number_of_employees")
     private Integer numberOfEmployees;
@@ -45,4 +50,10 @@ public class Company implements Serializable {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "deleted", columnDefinition = "boolean default false")
+    private boolean deleted;
+
+    @Embedded
+    private CompanyLocation location;
 }
